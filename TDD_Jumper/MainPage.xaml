@@ -14,6 +14,13 @@
                 <Image Name="Stickman" Source="/Images/stickman0.png"
                    Canvas.Left="20" Canvas.Top="200"/>
                 <Rectangle Name="Box" Width="50" Height="200" Fill="Black"/>
+                <TextBlock Name="GameOver" 
+                           Text="GAME OVER"
+                           FontSize="50"
+                           Width="600"
+                           Height="100"
+                           Visibility="Collapsed"
+                           TextAlignment="Center"/>
             </Canvas>
         </Viewbox>
         

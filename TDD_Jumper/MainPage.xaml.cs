@@ -28,9 +28,7 @@ namespace TDD_Jumper
         DispatcherTimer timer;
         int counter = 0;
         int speed = 0;
-        int boxX = 600;
-        int boxY = 300;
-        int stickY = 200;
+        Rect stickR, boxR;
 
         public MainPage()
         {
@@ -46,15 +44,19 @@ namespace TDD_Jumper
             timer.Tick += Tick;
             timer.Start();
 
+            DataContext = this;
+            stickR = new Rect(20, 200, 100, 150);
+            boxR = new Rect(600, 300, 50, 200);
+
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
 
         }
 
         private void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args)
         {
-            if (args.VirtualKey == Windows.System.VirtualKey.Space && stickY == 200)
+            if (args.VirtualKey == Windows.System.VirtualKey.Space && stickR.Y == 200)
             {
-                speed = -15;
+                speed = -17;
             }
         }
 
@@ -63,21 +65,19 @@ namespace TDD_Jumper
             counter = (counter + 1) % 8;
             Stickman.Source = images[counter];
 
-            boxX = (boxX > -100) ? boxX - 10 : 600;
-            
-            Box.SetValue(Canvas.LeftProperty, boxX);
-            Box.SetValue(Canvas.TopProperty, boxY);
-
-
             speed += 1;
-            stickY += speed;
-            if (stickY > 200)
-            {
-                stickY = 200;
-                speed = 0;
-            }
+            stickR.Y = Math.Min(200,stickR.Y + speed);
+            Stickman.SetValue(Canvas.TopProperty, stickR.Y);
 
-            Stickman.SetValue(Canvas.TopProperty,stickY);
+            boxR.X = (boxR.X > -100) ? boxR.X - 10 : 600;
+            Box.SetValue(Canvas.TopProperty, boxR.Y);
+            Box.SetValue(Canvas.LeftProperty, boxR.X);
+
+            if(RectHelper.Intersect(boxR,stickR) != Rect.Empty)
+            {
+                GameOver.Visibility = Visibility.Visible;
+                timer.Stop();
+            }
 
         }
     }
