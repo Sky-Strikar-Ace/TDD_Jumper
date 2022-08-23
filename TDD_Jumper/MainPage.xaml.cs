@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // 空白ページの項目テンプレートについては、https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x411 を参照してください
@@ -22,9 +23,31 @@ namespace TDD_Jumper
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        BitmapImage[] images = new BitmapImage[8];
+        DispatcherTimer timer;
+        int counter = 0;
+
+
         public MainPage()
         {
             this.InitializeComponent();
+
+            for(int i = 0; i < 8; i++)
+            {
+                images[i] = new BitmapImage(new Uri("ms-appx:///Images/stickman" + i + ".png"));
+            }
+
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(30);
+            timer.Tick += Tick;
+            timer.Start();
+
+        }
+
+        private void Tick(object sender, object e)
+        {
+            counter = (counter + 1) % 8;
+            Stickman.Source = images[counter];
         }
     }
 }
